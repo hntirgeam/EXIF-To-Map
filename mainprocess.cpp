@@ -1,7 +1,7 @@
 #include "mainprocess.h"
 #include "exif.h"
 
-void MainProcess::sendGpsToTxt(std::string file_name, double *lat, double *lon, double *alt)
+void MainProcess::sendGpsToTxt(const std::string file_name, double *lat, double *lon, double *alt)
 {
     std::ofstream file;
     file.open ("gps_coordinates.txt");
@@ -9,15 +9,44 @@ void MainProcess::sendGpsToTxt(std::string file_name, double *lat, double *lon, 
     file.close();
 }
 
-std::string MainProcess::getPath(std::string actualPath)
+std::string MainProcess::getPath(const std::string dirPath)
 {
+    namespace fs = std::experimental::filesystem;
+    
+    std::vector<std::string> findExtension = {"*.jpg", "*.jpeg"}; 
 
+    try
+    {
+        if(fs::exists(dirPath) && fs::is_directory(dirPath))
+        {
+            fs::recursive_directory_iterator iter(dirPath);
+            fs::recursive_directory_iterator end;
+
+            while (iter != end)
+            {
+                if (fs::is_directory(iter->path()) && 
+                    (std::find(findExtension.begin(), findExtension.end(), iter->path().filename()) == findExtension.end()));
+                    {
+                        std::cout << iter->path() << '\n';
+                    }
+            }
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+
+    
 }
 
 void MainProcess::printToConsole()
 {
     
 }
+
+// Code below somehow works, but I have barely any thoughts WHY and HOW.
 
 void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, double &lon, double &alt)
 {

@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <experimental/filesystem>
 
 class MainProcess
 {
@@ -20,11 +22,11 @@ public:
         m_longitude = longitude;
         m_altitude = altitude;
     }
-    std::string getPath(std::string actualPath);
+    std::string getPath(const std::string dirPath);
 
-    void retrieveGpsCoordinate(std::string file_path, double &lat, double &lon, double &alt);
+    void retrieveGpsCoordinate(const std::string file_path, double &lat, double &lon, double &alt);
 
-    void sendGpsToTxt(std::string file_name, double *lat, double *lon, double *alt);
+    void sendGpsToTxt(const std::string file_name, double *lat, double *lon, double *alt);
 
     void printToConsole();
 };
