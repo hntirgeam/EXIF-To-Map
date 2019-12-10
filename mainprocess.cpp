@@ -1,7 +1,7 @@
 #include "mainprocess.h"
 #include "exif.h"
 
-std::vector<std::string> MainProcess::getPath(const std::string dirPath)
+std::vector<std::string> MainProcess::getPath(const std::string &dirPath)
 {
     namespace fs = std::experimental::filesystem;
     
@@ -18,7 +18,7 @@ std::vector<std::string> MainProcess::getPath(const std::string dirPath)
     return file_urls;
 }
 
-void MainProcess::sendGpsToTxt(const std::vector<std::string> file_urls)
+void MainProcess::sendGpsToTxt(const std::vector<std::string> &file_urls)
 {
     double lat = 0, lon = 0, alt = 0;
 
@@ -46,7 +46,7 @@ void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, doub
     FILE *fp = fopen(file_name.c_str(), "rb");
     if (!fp)
     {
-        std::cout << "Sorry. I can't parse this file type yet" << '\n';
+        std::cerr << "Sorry. I can't parse this file type yet" << '\n';
     }
     fseek(fp, 0, SEEK_END);
     unsigned long fsize = ftell(fp);
@@ -55,7 +55,7 @@ void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, doub
     if (fread(buf, 1, fsize, fp) != fsize)
     {
         delete[] buf;
-        std::cout << "Sorry. I can't parse this file type yet" << '\n';
+        std::cerr << "Sorry. I can't parse this file type yet" << '\n';
     }
     fclose(fp);
 
@@ -64,7 +64,7 @@ void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, doub
     delete[] buf;
     if (code)
     {
-        std::cout << "Sorry. I can't parse this file type yet" << '\n';
+        std::cerr << "Sorry. I can't parse this file type yet" << '\n';
     }
 
     lat = result.GeoLocation.Latitude;
