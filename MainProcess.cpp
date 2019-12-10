@@ -1,32 +1,41 @@
-#include "mainprocess.h"
-#include "exif.h"
+#include "MainProcess.hpp"
 
-std::vector<std::string> MainProcess::getPath(const std::string dirPath)
+static bool isPhotoExtention(const std::string& aExtention)
+{
+	static const auto photoExtentions = {".jpg", ".jpeg", ".JPG", ".JPEG"};
+
+	return std::any_of(
+			photoExtentions.begin(),
+			photoExtentions.end(),
+			[&](auto &aPhotoExtention)
+			{
+				return aExtention == aPhotoExtention;
+			});
+}
+
+std::vector<std::string> MainProcess::getPath(const std::string& dirPath)
 {
     namespace fs = std::experimental::filesystem;
     
-    std::vector<std::string> file_urls = { }; 
+    std::vector<std::string> file_urls;
 
     for (auto& p: fs::recursive_directory_iterator(dirPath))
     {
-        if (p.path().extension() == ".jpg" || p.path().extension() == ".jpeg" || p.path().extension() == ".JPG" || p.path().extension() == ".JPEG")
-        {
-            std::string fs_string_path = fs::u8path(p);
-            file_urls.push_back(fs_string_path);
-        }
+        if (isPhotoExtention(p.path().extension()))
+            file_urls.emplace_back(fs::u8path(p));
     }
     return file_urls;
 }
 
-void MainProcess::sendGpsToTxt(const std::vector<std::string> file_urls)
+void MainProcess::sendGpsToTxt(const std::vector<std::string>& file_urls)
 {
     double lat = 0, lon = 0, alt = 0;
 
     std::ofstream txt;
-    txt.open ("gps_coordinates.txt");
+    txt.open("gps_coordinates.txt");
     
-    if (file_urls.size() != 0)
-        for(auto &file : file_urls)
+    if (!file_urls.empty())
+        for (auto &file : file_urls)
         {
             retrieveGpsCoordinate(file, lat, lon, alt);
             if (lat != 0.0 && lon != 0.0)
@@ -41,7 +50,7 @@ void MainProcess::sendGpsToTxt(const std::vector<std::string> file_urls)
     txt.close();
 }
 
-void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, double &lon, double &alt)
+void MainProcess::retrieveGpsCoordinate(const std::string& file_name, double &lat, double &lon, double &alt)
 {
     FILE *fp = fopen(file_name.c_str(), "rb");
     if (!fp)
@@ -51,7 +60,7 @@ void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, doub
     fseek(fp, 0, SEEK_END);
     unsigned long fsize = ftell(fp);
     rewind(fp);
-    unsigned char *buf = new unsigned char[fsize];
+    auto *buf = new unsigned char[fsize];
     if (fread(buf, 1, fsize, fp) != fsize)
     {
         delete[] buf;
