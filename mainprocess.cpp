@@ -9,7 +9,8 @@ std::vector<std::string> MainProcess::getPath(const std::string &dirPath)
 
     for (auto& p: fs::recursive_directory_iterator(dirPath))
     {
-        if (p.path().extension() == ".jpg" || p.path().extension() == ".jpeg" || p.path().extension() == ".JPG" || p.path().extension() == ".JPEG")
+        if (p.path().extension() == ".jpg" || p.path().extension() == ".jpeg" 
+            || p.path().extension() == ".JPG" || p.path().extension() == ".JPEG")
         {
             std::string fs_string_path = fs::u8path(p);
             file_urls.push_back(fs_string_path);
@@ -36,7 +37,7 @@ void MainProcess::sendGpsToTxt(const std::vector<std::string> &file_urls)
         }
     else
     {
-        std::cout << "No matching files was found" << '\n'; // or "*were found"
+        std::cerr << "No matching files was found" << '\n'; // or "*were found"
     }
     txt.close();
 }
