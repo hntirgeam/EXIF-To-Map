@@ -7,19 +7,17 @@
 #include <vector>
 #include <experimental/filesystem>
 
-#include <cstdio>
-#include <ctime>
 
 class MainProcess
 {
 
 public:
     
-    std::vector<std::string> getPath(const std::string dirPath);
+    std::vector<std::string> getPath(const std::string &dirPath);
 
     void retrieveGpsCoordinate(std::string file_name, double &lat, double &lon, double &alt);
 
-    void sendGpsToTxt(const std::vector<std::string> file_name);
+    void sendGpsToTxt(const std::vector<std::string> &file_name);
 };
 
 #endif
