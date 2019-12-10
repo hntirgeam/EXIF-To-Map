@@ -1,52 +1,45 @@
 #include "mainprocess.h"
 #include "exif.h"
 
-void MainProcess::sendGpsToTxt(const std::string file_name, double *lat, double *lon, double *alt)
-{
-    std::ofstream file;
-    file.open ("gps_coordinates.txt");
-    file << &lat << " " << &lon << " " << &alt << "\n";
-    file.close();
-}
-
-std::string MainProcess::getPath(const std::string dirPath)
+std::vector<std::string> MainProcess::getPath(const std::string dirPath)
 {
     namespace fs = std::experimental::filesystem;
     
-    std::vector<std::string> findExtension = {"*.jpg", "*.jpeg"}; 
+    std::vector<std::string> file_urls = { }; 
 
-    try
+    for (auto& p: fs::recursive_directory_iterator(dirPath))
     {
-        if(fs::exists(dirPath) && fs::is_directory(dirPath))
+        if (p.path().extension() == ".jpg" || p.path().extension() == ".jpeg" || p.path().extension() == ".JPG" || p.path().extension() == ".JPEG")
         {
-            fs::recursive_directory_iterator iter(dirPath);
-            fs::recursive_directory_iterator end;
-
-            while (iter != end)
-            {
-                if (fs::is_directory(iter->path()) && 
-                    (std::find(findExtension.begin(), findExtension.end(), iter->path().filename()) == findExtension.end()));
-                    {
-                        std::cout << iter->path() << '\n';
-                    }
-            }
+            std::string fs_string_path = fs::u8path(p);
+            file_urls.push_back(fs_string_path);
         }
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
-
-    
+    return file_urls;
 }
 
-void MainProcess::printToConsole()
+void MainProcess::sendGpsToTxt(const std::vector<std::string> file_urls)
 {
-    
-}
+    double lat = 0, lon = 0, alt = 0;
 
-// Code below somehow works, but I have barely any thoughts WHY and HOW.
+    std::ofstream txt;
+    txt.open ("gps_coordinates.txt");
+    
+    if (file_urls.size() != 0)
+        for(auto &file : file_urls)
+        {
+            retrieveGpsCoordinate(file, lat, lon, alt);
+            if (lat != 0.0 && lon != 0.0)
+            {
+                txt << lat << " " << lon << " " << alt << "\n";
+            }
+        }
+    else
+    {
+        std::cout << "No matching files was found" << '\n'; // or "*were found"
+    }
+    txt.close();
+}
 
 void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, double &lon, double &alt)
 {
