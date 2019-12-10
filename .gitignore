@@ -1,0 +1,4 @@
+test.cpp
+*.txt
+*.out
+.vscode
