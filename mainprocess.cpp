@@ -34,7 +34,7 @@ void MainProcess::sendGpsToTxt(const std::vector<std::string> &file_urls)
             retrieveGpsCoordinate(file, lat, lon, alt);
             if (lat != 0.0 && lon != 0.0)
             {
-                std::cout << file << " added successfully" << '\n';
+                std::cout << "Added successfully:\t\"" << file << "\"" << '\n';
                 txt << lat << " " << lon << " " << alt << "\n";
             }
         }
@@ -42,9 +42,7 @@ void MainProcess::sendGpsToTxt(const std::vector<std::string> &file_urls)
     }
     else
     {
-        std::cerr << "No matching files were found" << '\n';
-        // std::terminate();
-        exit(-1);
+        std::cerr << "Sorry, but no matching files were found" << '\n';
     }
 
     txt.close();
