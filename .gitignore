@@ -1,5 +1,4 @@
-test.cpp
 *.txt
 *.out
 .vscode
-.html
+*.html
