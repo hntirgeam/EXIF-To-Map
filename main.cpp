@@ -3,37 +3,34 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 
-int main()
+int main(int argc, char* argv[])
 {
-    namespace fs = std::experimental::filesystem;
-
-    std::string dir = {};    
-    
-    while(true)
+    try
     {
+        namespace fs = std::experimental::filesystem;
 
-        std::cout << "Pass me folder/directory with images pls: ";
-        std::getline(std::cin, dir);
+        std::string dir = {};    
 
-        if(!fs::is_directory(dir))
+        if (argc == 2)
+            dir = argv[1];
+        else
         {
-            std::cerr << "Not a directory\n";
-            continue;
+            std::cout << "Pass me folder/directory with images: ";
+            std::getline(std::cin, dir);
+            dir.erase(std::remove(dir.begin(), dir.end(), '\\'), dir.end());
         }
 
-        if(fs::is_empty(dir))
-        {
-            std::cerr << "Directory is empty\n";
-            continue;
-        }
-        break;
+        MainProcess map;
+
+        std::vector<std::string> urls = map.getPath(dir);
+        map.sendGpsToTxt(urls);
     }
-
-    MainProcess map;
-
-    std::vector<std::string> urls = map.getPath(dir);
-    map.sendGpsToTxt(urls);
-
-    return 0;
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    EXIT_SUCCESS;
 }
