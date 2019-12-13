@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
             std::cout << "Pass me folder/directory with images: ";
             std::getline(std::cin, dir);
             dir.erase(std::remove(dir.begin(), dir.end(), '\\'), dir.end());
+            dir.erase(std::remove(dir.begin(), dir.end(), '\''), dir.end());
         }
 
         MainProcess map;
