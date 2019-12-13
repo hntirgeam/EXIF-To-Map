@@ -1,5 +1,4 @@
-#ifndef MAINPROCESS_H
-#define MAINPROCESS_H
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -20,5 +19,3 @@ public:
 
     void sendGpsToTxt(const std::vector<std::string> &file_name);
 };
-
-#endif
