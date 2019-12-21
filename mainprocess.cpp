@@ -12,8 +12,7 @@ std::vector<std::string> MainProcess::getPath(const std::string &dirPath)
         if (p.path().extension() == ".jpg" || p.path().extension() == ".jpeg" 
             || p.path().extension() == ".JPG" || p.path().extension() == ".JPEG")
         {
-            std::string fs_string_path = fs::u8path(p);
-            file_urls.push_back(fs_string_path);
+            file_urls.emplace_back(fs::u8path(p));
         }
     }
     return file_urls;
@@ -25,7 +24,7 @@ void MainProcess::sendGpsToTxt(const std::vector<std::string> &file_urls)
 
     std::ofstream txt;
 
-    if (file_urls.size() != 0)
+    if (!file_urls.empty())
     {
         txt.open ("gps_coordinates.txt");
 
