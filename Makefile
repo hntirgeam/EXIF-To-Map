@@ -7,4 +7,4 @@ all:
 	$(CC) $(FILES)  $(FLAGS) -o $(NAME)
 
 clean:
-	rm *.html *.out *.txt 
+	rm *.html *.out *.txt GpsToMap
