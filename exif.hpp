@@ -26,8 +26,7 @@
    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
    EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-#ifndef __EXIF_HPP
-#define __EXIF_HPP
+#pragma once
 
 #include <string>
 
@@ -159,5 +158,3 @@ class EXIFInfo {
 #define PARSE_EXIF_ERROR_UNKNOWN_BYTEALIGN    1984
 // EXIF header was found, but data was corrupted.
 #define PARSE_EXIF_ERROR_CORRUPT              1985
-
-#endif
