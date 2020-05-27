@@ -12,7 +12,7 @@ std::vector<std::string> MainProcess::getPath(const std::string &dirPath)
         if (p.path().extension() == ".jpg" || p.path().extension() == ".jpeg" 
             || p.path().extension() == ".JPG" || p.path().extension() == ".JPEG")
         {
-            file_urls.emplace_back(fs::u8path(p));
+            file_urls.emplace_back(p.path());
         }
     }
     return file_urls;
@@ -57,7 +57,7 @@ void MainProcess::retrieveGpsCoordinate(std::string file_name, double &lat, doub
     fseek(fp, 0, SEEK_END);
     unsigned long fsize = ftell(fp);
     rewind(fp);
-    unsigned char *buf = new unsigned char[fsize];
+    auto *buf = new unsigned char[fsize];
     if (fread(buf, 1, fsize, fp) != fsize)
     {
         delete[] buf;
